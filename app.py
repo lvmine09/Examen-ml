@@ -8,32 +8,32 @@ import streamlit as st
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import normalize
 
-st.set_page_config(page_title="Clustering", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Clustering", layout="wide")
 
 # ---------------------------------------------------------------------------
 # Les jeux de données : un dossier models/<folder> contenant artefacts.joblib
 # (fichier créé à la fin de chaque notebook)
 # ---------------------------------------------------------------------------
 JEUX = {
-    "🌾 Grains de blé (K-means)": {
+    "Grains de blé (K-means)": {
         "folder": "seeds", "methode": "K-means",
         "source": "UCI : Seeds", "lien": "https://archive.ics.uci.edu/dataset/236/seeds",
         "texte": "Segmentation de grains de blé à partir de 7 mesures morphologiques (surface, périmètre, longueur, largeur...).",
         "couleurs": ("#43A047", "#1B5E20"),
     },
-    "📱 Clients télécom (CAH)": {
+    "Clients télécom (CAH)": {
         "folder": "customer", "methode": "CAH",
         "source": "UCI : Iranian Churn Dataset", "lien": "https://archive.ics.uci.edu/dataset/563/iranian+churn+dataset",
         "texte": "Segmentation de clients d'un opérateur télécom à partir de leur usage (appels, SMS, valeur du client).",
         "couleurs": ("#1E88E5", "#0D47A1"),
     },
-    "🛒 Wholesale customers (K-means)": {
+    "Wholesale customers (K-means)": {
         "folder": "wholesale", "methode": "K-means",
         "source": "UCI : Wholesale customers", "lien": "https://archive.ics.uci.edu/dataset/292/wholesale+customers",
         "texte": "Segmentation de clients d'un grossiste à partir de leurs dépenses annuelles par catégorie de produits.",
         "couleurs": ("#FB8C00", "#E65100"),
     },
-    "🍷 Wine Quality, vin rouge (CAH)": {
+    "Wine Quality, vin rouge (CAH)": {
         "folder": "wine", "methode": "CAH",
         "source": "UCI : Wine Quality", "lien": "https://archive.ics.uci.edu/dataset/186/wine+quality",
         "texte": "Segmentation de vins rouges à partir de leurs mesures physico-chimiques.",
@@ -71,7 +71,7 @@ def nettoyer(noms):
 # ---------------------------------------------------------------------------
 # Interface
 # ---------------------------------------------------------------------------
-st.sidebar.title("📊 Clustering")
+st.sidebar.title("Clustering")
 st.sidebar.caption("Choisis un jeu de données")
 choix = st.sidebar.selectbox("Jeu de données", list(JEUX), label_visibility="collapsed")
 jeu = JEUX[choix]
@@ -149,7 +149,7 @@ st.markdown("".join(
     for i, n in enumerate(noms_groupes)), unsafe_allow_html=True)
 st.write("")
 
-tab1, tab2 = st.tabs(["🎯 Simple Prédiction", "📂 Prédiction multiple"])
+tab1, tab2 = st.tabs(["Simple Prédiction", "Prédiction multiple"])
 
 # ----- Interface 1 : un seul individu
 with tab1:
@@ -176,7 +176,7 @@ with tab2:
     # fichier d'exemple téléchargeable
     exemple = pd.DataFrame([{c: round(art["mediane"][o] * f, 3) for c, o in zip(attendues, colonnes)}
                             for f in (0.7, 1.0, 1.3)])
-    st.download_button("⬇️ Télécharger un fichier d'exemple", exemple.to_csv(index=False),
+    st.download_button("Télécharger un fichier d'exemple", exemple.to_csv(index=False),
                        "exemple.csv", "text/csv", key=f"{choix}_exemple")
 
     fichier = st.file_uploader("Upload a csv file", type="csv", key=f"{choix}_file")
@@ -207,5 +207,5 @@ with tab2:
             ).properties(width="container", height=300)
             st.altair_chart(graphique)
 
-            st.download_button("⬇️ Download a csv file", df.to_csv(index=False),
+            st.download_button("Download a csv file", df.to_csv(index=False),
                                "predictions.csv", "text/csv", key=f"{choix}_dl")
