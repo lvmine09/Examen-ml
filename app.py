@@ -13,6 +13,12 @@ st.set_page_config(page_title="Clustering", page_icon="📊")
 # (fichier créé à la fin de chaque notebook)
 # ---------------------------------------------------------------------------
 JEUX = {
+    "Grains de blé (K-means)": {
+        "folder": "seeds",
+        "source": "UCI : Seeds",
+        "lien": "https://archive.ics.uci.edu/dataset/236/seeds",
+        "texte": "Segmentation de grains de blé à partir de 7 mesures morphologiques (surface, périmètre, longueur, largeur...).",
+    },
     "Clients télécom (CAH)": {
         "folder": "customer",
         "source": "UCI : Iranian Churn Dataset",
@@ -41,7 +47,9 @@ def charger(folder):
 
 def predire_classe(nouveau_client, art):
     """Même fonction que dans les notebooks : classe du centroïde le plus proche."""
-    client = normalize(np.array(nouveau_client, dtype=float).reshape(1, -1))
+    client = np.array(nouveau_client, dtype=float).reshape(1, -1)
+    if art.get("normaliser", True):  # les grains ne sont pas normalisés
+        client = normalize(client)
     distances = cdist(client, art["centroides"])
     return art["classes"][distances.argmin()]
 
@@ -98,7 +106,9 @@ with tab2:
         if manquantes:
             st.error("Colonnes manquantes dans le fichier : " + ", ".join(manquantes))
         else:
-            X = normalize(df[attendues].astype(float).values)
+            X = df[attendues].astype(float).values
+            if art.get("normaliser", True):
+                X = normalize(X)
             idx = cdist(X, art["centroides"]).argmin(axis=1)
             df["Classe"] = art["classes"][idx]
             df["Groupe"] = [art["noms_classes"][c].strip() for c in df["Classe"]]
